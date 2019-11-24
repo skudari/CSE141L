@@ -13,7 +13,7 @@ module LUT(
 
   initial begin
     $readmemb("machine_code.txt",int_array);
-
+  end
   always_comb
     internal_vector = int_array[addr];
 
