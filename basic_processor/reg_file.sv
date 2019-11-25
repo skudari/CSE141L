@@ -4,7 +4,7 @@
 //
 // Additional Comments: 					  $clog2
 
-module reg_file #(parameter W=8, D=4)(		 // W = data path width; D = pointer width
+module reg_file #(parameter W=8, D=3)(		 // W = data path width; D = pointer width
   input           CLK,
                   write_en,
   input  [ D-1:0] raddrA,
