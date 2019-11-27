@@ -27,8 +27,7 @@ module ALU(
      	OUT    = INPUTA & INPUTB;
 	SC_OUT = 0;
     end
-	  
-    kADD : {SC_OUT, OUT} = {1'b0,INPUTA} + INPUTB + SC_IN;  // add w/ carry-in & out
+	 
     kLSH : {SC_OUT, OUT} = {INPUTA, SC_IN};  	            // shift left 
     kRSH : {OUT, SC_OUT} = {SC_IN, INPUTA};			        // shift right
     
