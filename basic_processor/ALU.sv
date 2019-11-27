@@ -23,60 +23,21 @@ module ALU(
     {SC_OUT, OUT} = 0;            // default -- clear carry out and result out
 // single instruction for both LSW & MSW
   case(OP)
+    kAND : begin                                           // bitwise AND
+     	OUT    = INPUTA & INPUTB;
+	SC_OUT = 0;
+    end
+	  
     kADD : {SC_OUT, OUT} = {1'b0,INPUTA} + INPUTB + SC_IN;  // add w/ carry-in & out
     kLSH : {SC_OUT, OUT} = {INPUTA, SC_IN};  	            // shift left 
-	kRSH : {OUT, SC_OUT} = {SC_IN, INPUTA};			        // shift right
-//  kRSH : {OUT, SC_OUT} = (INPUTA << 1'b1) | SC_IN;
- 	kXOR : begin 
- 	         OUT    = INPUTA^INPUTB;  	     			   // exclusive OR
-			 SC_OUT = 0;					   		       // clear carry out -- possible convenience
-		   end
-    kAND : begin                                           // bitwise AND
-             OUT    = INPUTA & INPUTB;
-			 SC_OUT = 0;
-		   end
-    kSUB : begin
-	         OUT    = INPUTA + (~INPUTB) + SC_IN;	       // check me on this!
-			 SC_OUT = 0;                                   // check me on this!
-	       end
+    kRSH : {OUT, SC_OUT} = {SC_IN, INPUTA};			        // shift right
+    
+    kXOR : begin 
+	OUT    = INPUTA^INPUTB;  	     			   // exclusive OR
+	SC_OUT = 0;					   		       // clear carry out -- possible convenience
+    end
+    
     default: {SC_OUT,OUT} = 0;						       // no-op, zero out
   endcase
-// option 2 -- separate LSW and MSW instructions
-//    case(OP)
-//	  kADDL : {SC_OUT,OUT} = INPUTA + INPUTB ;    // LSW add operation
-//	  kLSAL : {SC_OUT,OUT} = (INPUTA<<1) ;  	  // LSW shift instruction
-//	  kADDU : begin
-//	            OUT = INPUTA + INPUTB + SC_IN;    // MSW add operation
-//                SC_OUT = 0;   
-//              end
-//	  kLSAU : begin
-//	            OUT = (INPUTA<<1) + SC_IN;  	  // MSW shift instruction
-//                SC_OUT = 0;
-//               end
-//      kXOR  : OUT = INPUTA ^ INPUTB;
-//	  kBRNE : OUT = INPUTA - INPUTB;   // use in conjunction w/ instruction decode 
-//  endcase
-	case(OUT)
-	  'b0     : ZERO = 1'b1;
-	  default : ZERO = 1'b0;
-	endcase
-//$display("ALU Out %d \n",OUT);
-    op_mnemonic = op_mne'(OP);					  // displays operation name in waveform viewer
-  end											
-  always_comb BEVEN = OUT[0];          			  // note [0] -- look at LSB only
-//    OP == 3'b101; //!INPUTB[0];               
-// always_comb	branch_enable = opcode[8:6]==3'b101? 1 : 0;  
+
 endmodule
-
-
-
-	   /*
-			Left shift
-
-            
-			  input a = 10110011   sc_in = 1
-
-              output = 01100111
-			  sc_out =	1
-
-							   */
