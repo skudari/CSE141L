@@ -3,8 +3,8 @@ import definitions::*;
 module program1(
  	input [7:0] regA, 
 	input [7:0] regB,
-	output [7:0] MSB, 
-	output [7:0] LSB
+	output [7:0] MSW, 
+	output [7:0] LSW
 );
 
 logic [7:0] output1, output2, output3, output4, output5, output6, output7 ;
@@ -129,4 +129,24 @@ ALU ANDNOTB5  (
 	  );
     
     assign p16 = evenBit8 ^ p8 ^ p4 ^ p2 ^ p1; 
-    
+
+    //Write out to MSW
+    assign MSW[7] = regA[2]; 
+    assign MSW[6] = regA[1]; 
+    assign MSW[5] = regA[0]; 
+    assign MSW[4] = regB[7];
+    assign MSW[3] = regB[6]; 
+    assign MSW[2] = regB[5]; 
+    assign MSW[1] = regB[4]; 
+    assign MSW[0] = p8; 
+	
+    //Write out to LSW
+    assign LSW[7] = regB[3]; 
+    assign LSW[6] = regB[2]; 
+    assign LSW[5] = regB[1]; 
+    assign LSW[4] = p4; 
+    assign LSW[3] = regB[0]; 
+    assign LSW[2] = p2; 
+    assign LSW[1] = p1; 
+    assign LSW[0] = p16; 
+	
