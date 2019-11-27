@@ -6,7 +6,7 @@ module program1(
   output [4:0] parityBits
 );
 
-logic [7:0] andOutput1, andOutput2, andOutput3;
+	logic [7:0] andOutput1, andOutput2, andOutput3, andOutput4, andOutput5, andOutput6, andOutput7 ;
 logic [7:0] xorOutput1, xorOutput2; 
 
 logic evenBit1, evenBit2, evenBit3, evenBit4, evenBit5, evenBit6, evenBit7, evenBit8; 
