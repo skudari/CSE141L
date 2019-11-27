@@ -1,29 +1,28 @@
 import definitions::*;	 
 
 module program1(
-
-  input [7:0] regA, [7:0] regB,
-  output [4:0] parityBits
+ 	input [7:0] regA, 
+	input [7:0] regB,
+	output [7:0] MSB, 
+	output [7:0] LSB
 );
 
-	logic [7:0] andOutput1, andOutput2, andOutput3, andOutput4, andOutput5, andOutput6, andOutput7 ;
-logic [7:0] xorOutput1, xorOutput2; 
+logic [7:0] output1, output2, output3, output4, output5, output6, output7 ;
 
 logic evenBit1, evenBit2, evenBit3, evenBit4, evenBit5, evenBit6, evenBit7, evenBit8; 
 
 logic b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1; 
 logic p8, p4, p2, p1, p16; 
 
-assign [7:0] zerob4tob1 = {b'11110000}; //0 out b4 to b1
-
 // CALCULATE p8
-
+assign [7:0] zerob4tob1 = {8'b11110000}; //0 out b4 to b1
+	
 //zero out lower 4 bits of mem[0]
 ALU ANDB4TOB1  (
 	  .INPUTA  (regB),
 	  .INPUTB  (zerob4tob1), 
 	  .OP      (kAND),
-	  .OUT     (andOutput1), //regWriteValue),
+	  .OUT     (output1), //regWriteValue),
 	  .SC_IN   , 1'b0),
 	  .SC_OUT  ,
 	  .ZERO ,
@@ -40,13 +39,13 @@ num_ones_for finOnesForP8(
  
 //CALCULATE p4
 
-assign [7:0] zerob7tob5b1 = {b'10001110}; //0 out b7 to b5 and b1
+	assign [7:0] zerob7tob5b1 = {8'b10001110}; //0 out b7 to b5 and b1
 
 ALU ANDNOTB5  (
 	  .INPUTA  (regB),
 	  .INPUTB  (zerob7tob5b1), 
 	  .OP      (kAND),
-	  .OUT     (andOutput2), //regWriteValue),
+	  .OUT     (output2), //regWriteValue),
 	  .SC_IN   , 1'b0),
 	  .SC_OUT  ,
 	  .ZERO ,
@@ -64,7 +63,7 @@ ALU ANDNOTB5  (
 	  .INPUTA  (regA),
 	  .INPUTB  (zerob9), 
 	  .OP      (kAND),
-	  .OUT     (andOutput3), //regWriteValue),
+	  .OUT     (output3), //regWriteValue),
 	  .SC_IN   , 1'b0),
 	  .SC_OUT  ,
 	  .ZERO ,
@@ -76,7 +75,7 @@ ALU ANDNOTB5  (
 	  .INPUTA  (regB),
 	  .INPUTB  (zerob8b5), 
 	  .OP      (kAND),
-	  .OUT     (andOutput4), //regWriteValue),
+	  .OUT     (output4), //regWriteValue),
 	  .SC_IN   , 1'b0),
 	  .SC_OUT  ,
 	  .ZERO ,
@@ -95,7 +94,7 @@ ALU ANDNOTB5  (
 	  .INPUTA  (regA),
 	  .INPUTB  (zerob10), 
 	  .OP      (kAND),
-	  .OUT     (andOutput5), //regWriteValue),
+	  .OUT     (output5), //regWriteValue),
 	  .SC_IN   , 1'b0),
 	  .SC_OUT  ,
 	  .ZERO ,
@@ -107,7 +106,7 @@ ALU ANDNOTB5  (
 	  .INPUTA  (regB),
 	  .INPUTB  (zerob8b5b3), 
 	  .OP      (kAND),
-	  .OUT     (andOutput6), //regWriteValue),
+	  .OUT     (output6), //regWriteValue),
 	  .SC_IN   , 1'b0),
 	  .SC_OUT  ,
 	  .ZERO ,
@@ -131,8 +130,3 @@ ALU ANDNOTB5  (
     
     assign p16 = evenBit8 ^ p8 ^ p4 ^ p2 ^ p1; 
     
-    assign output[1] = p1; 
-    assign output[2] = p2; 
-    assign output[3] = p4; 
-    assign output[4] = p8; 
-    assign output[5] = p16; 
