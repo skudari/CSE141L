@@ -28,9 +28,13 @@ always_comb data_outB = registers[raddrB];               // can read from addr 0
 
 // sequential (clocked) writes 
 always_ff @ (posedge CLK)
-  if (write_en && waddr)	                             // && waddr requires nonzero pointer address
-// if (write_en) if want to be able to write to address 0, as well
+begin
+  // if (write_en) if want to be able to write to address 0, as well
+  if (write_en && waddr)	// && waddr requires nonzero pointer address
+  begin 
     registers[waddr] <= data_inA;
     registers[waddr + 3'b001] <= data_inB;
+  end
+end
 
 endmodule
