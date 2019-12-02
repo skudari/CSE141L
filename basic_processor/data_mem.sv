@@ -12,7 +12,7 @@ module data_mem(
   input [7:0]        DataInA, //from registers
   input [7:0]       DataInB,
   output logic[7:0]  DataOutA, 
-  output logic[7:0] DataOutB,
+  output logic[7:0] DataOutB
 );
 
   logic [7:0] core[256];
