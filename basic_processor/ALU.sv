@@ -38,8 +38,7 @@ module ALU(
     
     default: {SC_OUT,OUT} = 0;						       // no-op, zero out
   endcase
-	  num_ones_for countOnes(
-		  .A(OUT),
-		  .ones(BEVEN)
-	  )
+
+  countOnes num_ones_for (.A(OUT), .ones(BEVEN));
+  end
 endmodule
