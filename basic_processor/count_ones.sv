@@ -13,6 +13,8 @@ begin
             ones = ones + 1;    //if its one, increment the count.
 end
 
+always@(A)
+begin
 if(ones % 2 == 0 ) 
   ones = 1'b0; 
 else 
