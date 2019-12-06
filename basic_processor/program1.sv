@@ -15,7 +15,8 @@ logic b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1;
 logic p8, p4, p2, p1, p16; 
 
 // CALCULATE p8
-assign [7:0] zerob4tob1 = {8'b11110000}; //0 out b4 to b1
+logic [7:0] zerob4tobl;
+assign zerob4tob1 = 8'b11110000; //0 out b4 to b1
 	
 //zero out lower 4 bits of mem[0]
 ALU ANDB4TOB1  (
@@ -23,7 +24,7 @@ ALU ANDB4TOB1  (
 	  .INPUTB  (zerob4tob1), 
 	  .OP      (kAND),
 	  .OUT     (output1), //regWriteValue),
-	  .SC_IN   , 1'b0),
+	  .SC_IN   (1'b0),
 	  .SC_OUT  ,
 	  .ZERO ,
 	  .BEVEN(evenBit1)
@@ -38,15 +39,15 @@ num_ones_for finOnesForP8(
  
  
 //CALCULATE p4
-
-	assign [7:0] zerob7tob5b1 = {8'b10001110}; //0 out b7 to b5 and b1
+logic [7:0] zerob7tob5bl;
+assign zerob7tob5b1 = 8'b10001110; //0 out b7 to b5 and b1
 
 ALU ANDNOTB5  (
 	  .INPUTA  (regB),
 	  .INPUTB  (zerob7tob5b1), 
 	  .OP      (kAND),
 	  .OUT     (output2), //regWriteValue),
-	  .SC_IN   , 1'b0),
+	  .SC_IN   (1'b0),
 	  .SC_OUT  ,
 	  .ZERO ,
 	  .BEVEN(evenBit3)
@@ -55,8 +56,9 @@ ALU ANDNOTB5  (
  assign p4 = evenBit2 ^ eveBit3;
  
  //CALCULAE P2
- assign [7:0] zerob9 = {8'b11111110}; //0 out b9
- assign [7:0] zerob8b5 = {8'b01101101} //0 out b8,b5,b2
+ logic [7:0] zerob9, zerob8b5;
+ assign zerob9 = 8'b11111110; //0 out b9
+ assign zerob8b5 = 8'b01101101; //0 out b8,b5,b2
  
  //operation on mem[1] to zero b9 
  ALU ANDB9 (
@@ -64,7 +66,7 @@ ALU ANDNOTB5  (
 	  .INPUTB  (zerob9), 
 	  .OP      (kAND),
 	  .OUT     (output3), //regWriteValue),
-	  .SC_IN   , 1'b0),
+	  .SC_IN   (1'b0),
 	  .SC_OUT  ,
 	  .ZERO ,
 	  .BEVEN(evenBit4)
@@ -76,38 +78,38 @@ ALU ANDNOTB5  (
 	  .INPUTB  (zerob8b5), 
 	  .OP      (kAND),
 	  .OUT     (output4), //regWriteValue),
-	  .SC_IN   , 1'b0),
+	  .SC_IN   (1'b0),
 	  .SC_OUT  ,
 	  .ZERO ,
 	  .BEVEN(evenBit5)
 	  );
    
-  assign p2 = evenBit4 ^ evenBit5;
+assign p2 = evenBit4 ^ evenBit5;
   
-  //CALCULATE P1 
-  
-  assign [7:0] zerob10 = {8'b11111101}; //0 out b10
-  assign [7:0] zerob8b5b3 = {8'b01011011} //0 out B8, B6  B3
+//CALCULATE P1 
+logic [7:0] zerob10, zerob8b5b3;
+assign zerob10 = 8'b11111101; //0 out b10
+assign zerob8b5b3 = 8'b01011011; //0 out B8, B6  B3
  
   //operation on mem[1] to zero b9 
-  ALU ANDB9 (
+  ALU ANDB9_2 (
 	  .INPUTA  (regA),
 	  .INPUTB  (zerob10), 
 	  .OP      (kAND),
 	  .OUT     (output5), //regWriteValue),
-	  .SC_IN   , 1'b0),
+	  .SC_IN   (1'b0),
 	  .SC_OUT  ,
 	  .ZERO ,
 	  .BEVEN(evenBit6)
 	  );
     
   //operation to 
-  ALU ANDB8TOB5 (
+  ALU ANDB8TOB5_2 (
 	  .INPUTA  (regB),
 	  .INPUTB  (zerob8b5b3), 
 	  .OP      (kAND),
 	  .OUT     (output6), //regWriteValue),
-	  .SC_IN   , 1'b0),
+	  .SC_IN   (1'b0),
 	  .SC_OUT  ,
 	  .ZERO ,
 	  .BEVEN(evenBit7)
@@ -122,7 +124,7 @@ ALU ANDNOTB5  (
 	  .INPUTB  (regB), 
 	  .OP      (kXOR),
 	  .OUT     (andOutput7), //regWriteValue),
-	  .SC_IN   , 1'b0),
+	  .SC_IN   (1'b0),
 	  .SC_OUT  ,
 	  .ZERO ,
 	  .BEVEN(evenBit8)
@@ -150,3 +152,4 @@ ALU ANDNOTB5  (
     assign LSW[1] = p1; 
     assign LSW[0] = p16; 
 	
+endmodule 

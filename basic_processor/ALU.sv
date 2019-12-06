@@ -6,12 +6,39 @@
 // Additional Comments: 
 //   combinational (unclocked) ALU
 import definitions::*;			  // includes package "definitions"
+//`include "count_ones.sv"
+
+module co(
+    input [7:0] A,
+    output ones     //0 if even 1 if odd
+    );
+
+integer i, o;
+
+always@(A)
+begin
+    o = 0;  //initialize count variable.
+    for(i=0;i<8;i=i+1)   //check for all the bits.
+        if(A[i] == 1'b1)    //check if the bit is '1'
+            o = o + 1;    //if its one, increment the count.
+end
+
+always@(A)
+begin
+if(o % 2 == 0 ) 
+  ones = 1'b0; 
+else 
+  ones = 1'b1;
+end
+
+endmodule
+
 module ALU(
   input [ 7:0] INPUTA,      	  // data inputs
                INPUTB,
   input [ 2:0] OP,				  // ALU opcode, part of microcode
-  input        SC_IN,             // shift in/carry in 
   output logic [7:0] OUT,		  // or:  output reg [7:0] OUT,
+  input        SC_IN,             // shift in/carry in 
   output logic SC_OUT,			  // shift out/carry out
   output logic ZERO,              // zero out flag
   output logic BEVEN              // tells you if you have an even number of ones -- 0 for even, 1 for odd
@@ -39,6 +66,11 @@ module ALU(
     default: {SC_OUT,OUT} = 0;						       // no-op, zero out
   endcase
 
-  countOnes num_ones_for (.A(OUT), .ones(BEVEN));
-  end
+  co c (
+	.A(OUT), 
+	.ones(BEVEN)
+	);
+	end
 endmodule
+
+

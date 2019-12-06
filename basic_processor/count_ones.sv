@@ -1,4 +1,4 @@
-module num_ones_for(
+module count_ones(
     input [7:0] A,
     output ones     //0 if even 1 if odd
     );

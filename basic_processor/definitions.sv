@@ -12,7 +12,7 @@ package definitions;
     const logic [2:0]kBNE  = 3'b110;
 // enum names will appear in timing diagram
     typedef enum logic[2:0] {
-        ADD, LSH, RSH, XOR,`
+        ADD, LSH, RSH, XOR,
         LD, SW, BNE } op_mne;
 // note: kADD is of type logic[2:0] (3-bit binary)
 //   ADD is of type enum -- equiv., but watch casting

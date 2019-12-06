@@ -47,11 +47,69 @@ logic       SC_IN;         // carry register (loop with ALU)
 		.MSW(MSW), 
 		.LSW(LSW)
 	);
+	
+	//FROM TopLevel
+// Fetch = Program Counter + Instruction ROM
+// Program Counter
+  PC PC1 (
+	.init       (start), 
+	.halt              ,  // SystemVerilg shorthand for .halt(halt), 
+	.jump_en(jump_en),  // jump enable
+	.branch_en(branch_en)	       ,  // branch enable
+	.CLK(CLK)  ,  // (CLK) is required in Verilog, optional in SystemVerilog
+	.PC(PC)             	  // program count = index to instruction memory
+	);					  
+
+// Control decoder
+  Ctrl Ctrl1 (
+	  .Instruction(Instruction),    // from instr_ROM
+	  .ZERO(ZERO),			 // from ALU: result = 0
+	  .BEVEN(BEVEN),			 // from ALU: input B is even (LSB=0)
+	  .jump_en(jump_en),		 // to PC
+	  .branch_en(branch_en)		 // to PC
+  );
+// instruction ROM
+  InstROM instr_ROM1(
+	.InstAddress(PC), 
+	.InstOut(Instruction)
+	);
+
+	assign load_inst = Instruction[8:6]==3'b100;  // calls out load specially
+
+// reg file
+	reg_file #(.W(8),.D(4)) reg_file1 (
+		.CLK    				  ,
+		.write_en  (reg_wr_en)    , 
+		.raddrA    ({1'b0,Instruction[5:3]}),         //concatenate with 0 to give us 4 bits
+		.raddrB    ({1'b0,Instruction[2:0]}), 
+		.waddr     ({1'b0,Instruction[5:3]+1}), 	  // mux above
+		.data_in   (regWriteValue) , 
+		.data_outA (ReadA        ) , 
+		.data_outB (ReadB		 )
+	);
+
+   assign InA = ReadA;						          // connect RF out to ALU in
+	assign InB = ReadB;
+	assign MEM_WRITE = (Instruction == 9'h111);       // mem_store command
+	assign regWriteValue = load_inst? Mem_Out : ALU_out;  // 2:1 switch into reg_file
+   
+	ALU ALU1  (
+	  .INPUTA  (InA),
+	  .INPUTB  (InB), 
+	  .OP      (Instruction[8:6]),
+	  .OUT     (ALU_out),//regWriteValue),
+	  .SC_IN   ,//(SC_IN),
+	  .SC_OUT  ,
+	  .ZERO ,
+	  .BEVEN
+	  );
+	  
+ /****************MY CODE***********************/
 	//if instruction is store: pass in MSW and LSW into regFile 	
 	//if instruction is load: pass in DataOutA and DataOutB into regFile
 	
 	//load from data mem into register
-	reg_file load(		
+	reg_file loadIntoReg (		
 		.CLK(CLK),
 		.write_en(1'b1),
 		.raddrA({1'b0, 3'b100}),
@@ -72,7 +130,7 @@ logic       SC_IN;         // carry register (loop with ALU)
 		.DataInA       (), 
 		.DataInB       (),
 		.DataOutA      (DataOutA), //A is mem[1] 
-		.DataOutB      (DataOutB), 	//B is mem[0] 
+		.DataOutB      (DataOutB) 	//B is mem[0] 
 	);	
 	
 	
