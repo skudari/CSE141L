@@ -8,31 +8,6 @@
 import definitions::*;			  // includes package "definitions"
 //`include "count_ones.sv"
 
-module co(
-    input [7:0] A,
-    output ones     //0 if even 1 if odd
-    );
-
-integer i, o;
-
-always@(A)
-begin
-    o = 0;  //initialize count variable.
-    for(i=0;i<8;i=i+1)   //check for all the bits.
-        if(A[i] == 1'b1)    //check if the bit is '1'
-            o = o + 1;    //if its one, increment the count.
-end
-
-always@(A)
-begin
-if(o % 2 == 0 ) 
-  ones = 1'b0; 
-else 
-  ones = 1'b1;
-end
-
-endmodule
-
 module ALU(
   input [ 7:0] INPUTA,      	  // data inputs
                INPUTB,
@@ -46,6 +21,11 @@ module ALU(
 	 
   op_mne op_mnemonic;			  // type enum: used for convenient waveform viewing
   	
+  count_ones co(
+	.A(OUT), 
+	.ones(BEVEN)
+	);
+
   always_comb begin
     {SC_OUT, OUT} = 0;            // default -- clear carry out and result out
 // single instruction for both LSW & MSW
@@ -65,12 +45,5 @@ module ALU(
     
     default: {SC_OUT,OUT} = 0;						       // no-op, zero out
   endcase
-
-  co c (
-	.A(OUT), 
-	.ones(BEVEN)
-	);
 	end
 endmodule
-
-
